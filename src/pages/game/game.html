@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Inteligencia Artificial</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row justify-content-center>
+    <ion-card col-md-4>
+
+      <ion-card-content>
+        <ion-row class="team-title">
+          <div col-md-6 text-left class="red">
+            Red TEAM
+          </div>
+          <div col-md-6 text-right class="blue">
+            Blue TEAM
+          </div>
+        </ion-row>
+        <div>
+          <ion-row justify-content-center>
+            <div *ngFor="let selector of selectors; let i = index;"
+              class="selector"
+              [class.selector-blue]="currentPlayer === 2"
+              [class.selector-red]="currentPlayer === 1"
+              (click)="selectColumnForPlay(i)"
+              >
+
+            </div>
+          </ion-row>
+          <ion-row *ngFor="let lines of gameMatrix; let i = index" justify-content-center>
+            <ng-container *ngFor="let circle of lines">
+              <div class="circle" [class.circle-blue]="circle === 2" [class.circle-red]="circle === 1" >
+              </div>
+            </ng-container>
+          </ion-row>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-row>
+</ion-content>

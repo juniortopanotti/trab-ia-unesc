@@ -1,0 +1,46 @@
+page-game {
+  .team-title {
+    font-weight: bold;
+  }
+
+  .team-title .red {
+    color: #ff0000;
+  }
+
+  .team-title .blue {
+    color: #0000ff;
+  }
+
+  .circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border-color: black;
+    border: solid;
+    margin: 2px;
+  }
+
+  .selector {
+    width: 50px;
+    height: 20px;
+    border-color: black;
+    border: solid;
+    margin: 2px;
+  }
+
+  .selector-blue:hover {
+    background-color: blue;
+  }
+
+  .selector-red:hover {
+    background-color: red;
+  }
+
+  .circle-red {
+    background-color: red;
+  }
+
+  .circle-blue {
+    background-color: blue;
+  }
+}
