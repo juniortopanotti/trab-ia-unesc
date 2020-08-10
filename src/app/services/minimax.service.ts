@@ -8,13 +8,13 @@ export class MinimaxService {
     branco = 0;
     token = [1, 2];
     score = {
-        "EMPATE": 0,
-        "X": 1,
-        "O": -1
+        null: 0,
+        1: 1,
+        2: -1
     }
 
     verificaGanhador(board) {
-        return "X"
+        
     }
 
     fazMovimento(board, j, player) {
