@@ -5,24 +5,26 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MinimaxService {
-    branco = " ";
-    token = ["vermelho", "azul"];
+    branco = 0;
+    token = [1, 2];
     score = {
-        "EMPATE": 0,
-        "X": 1,
-        "O": -1
+        null: 0,
+        1: 1,
+        2: -1
     }
 
     verificaGanhador(board) {
-        return "X"
+        
     }
 
     fazMovimento(board, j, player) {
         for(let i=0; i<6;i++) {
             if(board[i][j] != this.branco) {
-                board[i - 1][j] = this.token[player]
+                board[i - 1][j] = this.token[player - 1]
+                return board
             }
         }
+
         return board
     }
 
@@ -52,11 +54,11 @@ export class MinimaxService {
                 best_value = value
                 best_move = possibility
             }
-            else if(player == 0 && value > best_value) {
+            else if(player == 1 && value > best_value) {
                 best_value = value
                 best_move = possibility
             }
-            else if(player == 1 && value < best_value) {
+            else if(player == 2 && value < best_value) {
                 best_value = value
                 best_move = possibility
             }
@@ -71,7 +73,12 @@ export class MinimaxService {
             return this.score[winner]
         }
 
-        player = (player + 1)%2
+        if(player == 1) {
+          player = 2
+        }
+        else {
+          player = 1
+        }
 
         let possibilities = this.getPosicoes(board)
         let best_value = null
@@ -85,10 +92,10 @@ export class MinimaxService {
             if(best_value == null) {
                 best_value = value
             }
-            else if(player == 0 && value > best_value) {
+            else if(player == 1 && value > best_value) {
                 best_value = value
             }
-            else if(player == 1 && value < best_value) {
+            else if(player == 2 && value < best_value) {
                 best_value = value
             }
         
