@@ -21,8 +21,10 @@ export class MinimaxService {
         for(let i=0; i<6;i++) {
             if(board[i][j] != this.branco) {
                 board[i - 1][j] = this.token[player - 1]
+                return board
             }
         }
+
         return board
     }
 
