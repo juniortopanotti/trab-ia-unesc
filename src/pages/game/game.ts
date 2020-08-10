@@ -65,12 +65,23 @@ export class GamePage {
   }
 
   checkForWinners() {
-    this.checkIfHasDiagonalWinner();
-    this.checkIfHasHorizontalWinner();
-    this.checkIfHasVerticalWinner();
+    let winner = this.checkIfHasDiagonalWinner();
+    if(winner != null) {
+      return winner
+    }
+    winner = this.checkIfHasHorizontalWinner();
+    if(winner != null) {
+      return winner
+    }
+    winner = this.checkIfHasVerticalWinner();
+    if(winner != null) {
+      return winner
+    }
   }
 
-  checkIfHasDiagonalWinner() {}
+  checkIfHasDiagonalWinner() {
+    return 0
+  }
 
   checkIfHasHorizontalWinner() {
     let lastValue = 0;
@@ -92,7 +103,7 @@ export class GamePage {
           }
           if (hits >= 4) {
             this.winGameAndReset(currentValue);
-            return;
+            return currentValue;
           }
         }
       }
@@ -119,7 +130,7 @@ export class GamePage {
           }
           if (hits >= 4) {
             this.winGameAndReset(currentValue);
-            return;
+            return currentValue;
           }
         }
       }
