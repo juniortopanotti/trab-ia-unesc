@@ -1,21 +1,25 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Inteligencia Artificial</ion-title>
+    <ion-title text-center>Inteligencia Artificial</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-row justify-content-center>
-    <ion-card col-md-4>
-
+    <ion-card col-md-3>
       <ion-card-content>
         <ion-row class="team-title">
           <div col-md-6 text-left class="red">
-            Red TEAM
+            Red TEAM {{players.red}}
           </div>
           <div col-md-6 text-right class="blue">
-            Blue TEAM
+            {{players.blue}} Blue TEAM
           </div>
+        </ion-row>
+        <ion-row *ngIf="winner" style="padding: 20px 0px 20px 0px;" justify-content-center>
+          <h2>
+            O jogador <b>{{ winner == 1 ? 'Red' : 'Blue'}}</b> venceu!
+          </h2>
         </ion-row>
         <div>
           <ion-row justify-content-center>
@@ -35,6 +39,9 @@
             </ng-container>
           </ion-row>
         </div>
+        <ion-row justify-content-center *ngIf="winner" style="padding-top: 10px">
+          <button ion-button color="primary" (click)="playAgain()" >Jogar novamente!</button>
+        </ion-row>
       </ion-card-content>
     </ion-card>
   </ion-row>

@@ -12,6 +12,10 @@ export class GamePage {
   private selectors: number[] = new Array(7);
   private playBlocked: boolean = false;
   private winner: number;
+  private players: any = {
+    red: 0,
+    blue: 0,
+  };
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.initializeGameMatrix();
@@ -29,7 +33,7 @@ export class GamePage {
   }
 
   selectColumnForPlay(column) {
-    if (!this.playBlocked) {
+    if (!this.playBlocked && !this.winner) {
       this.playBlocked = true;
       this.recursiveLineMatrizLoop(0, column);
     }
@@ -87,7 +91,7 @@ export class GamePage {
             hits += 1;
           }
           if (hits >= 4) {
-            this.winner = currentValue;
+            this.winGameAndReset(currentValue);
             return;
           }
         }
@@ -114,11 +118,25 @@ export class GamePage {
             hits += 1;
           }
           if (hits >= 4) {
-            this.winner = currentValue;
+            this.winGameAndReset(currentValue);
             return;
           }
         }
       }
     }
+  }
+
+  winGameAndReset(winner) {
+    this.winner = winner;
+    if (winner === 1) {
+      this.players.red += 1;
+    } else if (winner === 2) {
+      this.players.blue += 1;
+    }
+  }
+
+  playAgain() {
+    this.winner = null;
+    this.initializeGameMatrix();
   }
 }
