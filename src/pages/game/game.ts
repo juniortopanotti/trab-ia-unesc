@@ -1,3 +1,5 @@
+import { MinMaxProvider } from "./../../providers/min-max/min-max";
+
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 
@@ -17,7 +19,11 @@ export class GamePage {
     blue: 0,
   };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public minMax: MinMaxProvider
+  ) {
     this.initializeGameMatrix();
   }
 
@@ -33,6 +39,7 @@ export class GamePage {
   }
 
   selectColumnForPlay(column) {
+    console.log("playBlocked", this.playBlocked);
     if (!this.playBlocked && !this.winner) {
       this.playBlocked = true;
       this.recursiveLineMatrizLoop(0, column);
@@ -60,27 +67,35 @@ export class GamePage {
     }, 50);
   }
 
-  changeCurrentPlayer() {
+  async changeCurrentPlayer() {
     this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
+    console.log("changePlayer", this.currentPlayer);
+    if (this.currentPlayer === 2) {
+      const column = await this.minMax.moveIA(
+        this.gameMatrix,
+        this.currentPlayer
+      );
+      this.selectColumnForPlay(column);
+    }
   }
 
   checkForWinners() {
     let winner = this.checkIfHasDiagonalWinner();
-    if(winner != null) {
-      return winner
+    if (winner != null) {
+      return winner;
     }
     winner = this.checkIfHasHorizontalWinner();
-    if(winner != null) {
-      return winner
+    if (winner != null) {
+      return winner;
     }
     winner = this.checkIfHasVerticalWinner();
-    if(winner != null) {
-      return winner
+    if (winner != null) {
+      return winner;
     }
   }
 
   checkIfHasDiagonalWinner() {
-    return 0
+    return 0;
   }
 
   checkIfHasHorizontalWinner() {
@@ -144,6 +159,7 @@ export class GamePage {
     } else if (winner === 2) {
       this.players.blue += 1;
     }
+    this.currentPlayer = 1;
   }
 
   playAgain() {
