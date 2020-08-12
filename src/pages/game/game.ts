@@ -40,7 +40,7 @@ export class GamePage {
 
   selectColumnForPlay(column) {
     //console.log("playBlocked", this.playBlocked);
-    if (!this.playBlocked && !this.winner) {
+    if (!this.playBlocked && !this.winner && this.gameMatrix[0][column]) {
       this.playBlocked = true;
       this.recursiveLineMatrizLoop(0, column);
     }
