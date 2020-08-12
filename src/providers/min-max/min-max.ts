@@ -14,9 +14,9 @@ export class MinMaxProvider {
   };
 
  verificaGanhador(board, currentRow, currentCol) {
-    //console.log("ganhador", board, currentRow, currentCol)
+   
     let newToken = board[currentRow][currentCol]; //jogador
-    //console.log("token", newToken)
+
     let count = 0;//contador se chegar a 4 = vitória
 
     // Horizontal 
