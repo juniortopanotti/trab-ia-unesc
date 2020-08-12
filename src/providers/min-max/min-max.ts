@@ -13,13 +13,17 @@ export class MinMaxProvider {
     2: -1,
   };
 
- verificaGanhador(board, currentRow, currentCol) {
-    //console.log("ganhador", board, currentRow, currentCol)
+ verificaGanhador(board, currentRow, currentCol, csn=false) {
     let newToken = board[currentRow][currentCol]; //jogador
-    //console.log("token", newToken)
+
     let count = 0;//contador se chegar a 4 = vitória
 
-    // Horizontal 
+    // Horizontal
+    if(csn) {
+      console.log("csn",newToken, currentRow, currentCol)
+    }
+    
+
     for (let i = 0; i < 7; i++) {
       if (board[currentRow][i] == newToken)
           count++;
@@ -30,7 +34,6 @@ export class MinMaxProvider {
           return newToken;
     }
 
-    //vertical
     for (let i = 0; i < 6; i++) {
       if (board[i][currentCol] == newToken)
         count++;
@@ -41,75 +44,26 @@ export class MinMaxProvider {
         return newToken;
     }
 
-    // 4 na diagonal 1
-    //linha 0 até linha 5
-    for (let guideLine = 0; guideLine < 6 - 3; guideLine++) {
-        count = 0;
-        let row, col;
-        for (row = guideLine, col = 0; row < 6 && col < 7; row++, col++) {
-            if (board[row][col] == newToken) {
-                count++;
-                if (count >= 4) {
-                    return newToken;
-                }
-            }
-            else {
-                count = 0;
-            }
-        }
-    }
-    // 4 na diagonal 
-    //coluna 0 até colina 6
-    for (let guideColumn = 1; guideColumn < 7 - 3; guideColumn++) {
-        count = 0;
-        let row, col;
-        for (row = 0, col = guideColumn; row < 6 && col < 7; row++, col++) {
-            if (board[row][col] == newToken) {
-                count++;
-                if (count >= 4) {
-                    return newToken;
-                }
-            }
-            else {
-                count = 0;
-            }
-        }
-    }
+    let COLUMN_COUNT = 7
+    let ROW_COUNT = 6
 
-    // 4 na diagonal inversa
-    //linha 0 até linha 5
-    for (let guideLine = 0; guideLine < 6 - 3; guideLine++) {
-        count = 0;
-        let row, col;
-        for (row = guideLine, col = 6; row < 0 && col < 6; row++, col--) {
-            if (board[row][col] == newToken) {
-                count++;
-                if (count >= 4) {
-                    return newToken;
-                }
-            }
-            else {
-                count = 0;
-            }
-        }
-    }
+    for(let i=0; i < COLUMN_COUNT - 3; i++) {
+      for(let j=0; j < ROW_COUNT - 3; j++) {
+        if(board[j][i] != 0 && board[j][i] == board[j+1][i+1] &&  board[j+1][i+1] == board[j+2][i+2]
+          && board[j+2][i+2] == board[j+3][i+3]) {
 
-    // 4 na diagonal inversa
-    //coluna 0 até colina 6
-    for (let guideColumn = 5; guideColumn > 2; guideColumn--) {
-        count = 0;
-        let row, col;
-        for (row = 0, col = guideColumn; row < 6 && col > 2; row++, col--) {
-            if (board[row][col] == newToken) {
-                count++;
-                if (count >= 4) {
-                    return newToken;
-                }
-            }
-            else {
-                count = 0;
-            }
+          return board[j][i]
         }
+      }
+    }
+    for(let i=0; i < COLUMN_COUNT - 3;i++) {
+      for(let j=3; j<ROW_COUNT;j++) {
+        if(board[j][i] != 0 && board[j][i] == board[j-1][i+1] && 
+          board[j-2][i+2] == board[j-1][i+1] && board[j-3][i+3] == board[j-1][i+1]){
+
+          return board[j][i]
+        }
+      }
     }
 
     return 0;
@@ -138,7 +92,7 @@ export class MinMaxProvider {
     return posicoes;
   }
 
-  moveIA(board, player, difficulty = 2) {
+  moveIA(board, player, difficulty = 5) {
     let possibilities = this.getPosicoes(board);
     let best_value = null;
     let best_move = null;
@@ -146,7 +100,6 @@ export class MinMaxProvider {
     for (let possibility of possibilities) {
       // Talvez tenha que fazer json parse unparse
       let result = this.fazMovimento(this.fixBoard(board), possibility, player);
-      console.log("result", result)
       let board_aux = this.fixBoard(result[0])
       let i = result[1]
       let value = this.minimax(board_aux, player, i, possibility, 1, difficulty);
@@ -171,7 +124,6 @@ export class MinMaxProvider {
   }
 
   minimax(board, player, i, j, deaph, difficulty) {
-    console.log("deaph", deaph, i, j)
     let ganhador = this.verificaGanhador(board, i, j);
     
     if(ganhador != 0) {

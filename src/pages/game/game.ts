@@ -39,16 +39,17 @@ export class GamePage {
   }
 
   selectColumnForPlay(column) {
-    console.log("playBlocked", this.playBlocked);
+    //console.log("playBlocked", this.playBlocked);
     if (!this.playBlocked && !this.winner) {
       this.playBlocked = true;
       this.recursiveLineMatrizLoop(0, column);
     }
   }
 
-  recursiveLineMatrizLoop(index, column) {
+  recursiveLineMatrizLoop(index, column, change= -1) {
     setTimeout(() => {
       if (this.gameMatrix[index][column] === 0) {
+        change = index
         this.gameMatrix[index][column] = this.currentPlayer;
         if (index !== 0) {
           this.gameMatrix[index - 1][column] = 0;
@@ -57,19 +58,18 @@ export class GamePage {
 
       index += 1;
       if (index < 6) {
-        this.recursiveLineMatrizLoop(index, column);
+        this.recursiveLineMatrizLoop(index, column, change);
       } else {
         this.playBlocked = false;
+        this.checkForWinners(change, column)
         this.changeCurrentPlayer();
-        this.checkIfHasHorizontalWinner();
-        this.checkIfHasVerticalWinner();
       }
     }, 50);
   }
 
   async changeCurrentPlayer() {
     this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
-    console.log("changePlayer", this.currentPlayer);
+    // console.log("changePlayer", this.currentPlayer);
     if (this.currentPlayer === 2) {
       const column = await this.minMax.moveIA(
         this.gameMatrix,
@@ -79,78 +79,11 @@ export class GamePage {
     }
   }
 
-  checkForWinners() {
-    let winner = this.checkIfHasDiagonalWinner();
-    if (winner != null) {
-      return winner;
-    }
-    winner = this.checkIfHasHorizontalWinner();
-    if (winner != null) {
-      return winner;
-    }
-    winner = this.checkIfHasVerticalWinner();
-    if (winner != null) {
-      return winner;
-    }
+  checkForWinners(index, column) {
+    let winner = this.minMax.verificaGanhador(this.gameMatrix, index, column, true);
+    this.winGameAndReset(winner);
   }
 
-  checkIfHasDiagonalWinner() {
-    return 0;
-  }
-
-  checkIfHasHorizontalWinner() {
-    let lastValue = 0;
-    let currentValue = 0;
-
-    for (let i = 0; i < 6; i++) {
-      let hits = 1;
-      for (let j = 0; j < 7; j++) {
-        if (!this.winner) {
-          currentValue = this.gameMatrix[i][j];
-          if (currentValue !== 0) {
-            if (j > 0) {
-              lastValue = this.gameMatrix[i][j - 1];
-            }
-            if (currentValue !== lastValue) {
-              hits = 0;
-            }
-            hits += 1;
-          }
-          if (hits >= 4) {
-            this.winGameAndReset(currentValue);
-            return currentValue;
-          }
-        }
-      }
-    }
-  }
-
-  checkIfHasVerticalWinner() {
-    let lastValue = 0;
-    let currentValue = 0;
-
-    for (let i = 0; i < 7; i++) {
-      let hits = 1;
-      for (let j = 0; j < 6; j++) {
-        if (!this.winner) {
-          currentValue = this.gameMatrix[j][i];
-          if (currentValue !== 0) {
-            if (j > 0) {
-              lastValue = this.gameMatrix[j - 1][i];
-            }
-            if (currentValue !== lastValue) {
-              hits = 0;
-            }
-            hits += 1;
-          }
-          if (hits >= 4) {
-            this.winGameAndReset(currentValue);
-            return currentValue;
-          }
-        }
-      }
-    }
-  }
 
   winGameAndReset(winner) {
     this.winner = winner;
@@ -159,7 +92,7 @@ export class GamePage {
     } else if (winner === 2) {
       this.players.blue += 1;
     }
-    this.currentPlayer = 1;
+
   }
 
   playAgain() {
