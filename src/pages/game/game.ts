@@ -40,7 +40,7 @@ export class GamePage {
 
   selectColumnForPlay(column) {
     //console.log("playBlocked", this.playBlocked);
-    if (!this.playBlocked && !this.winner && this.gameMatrix[0][column]) {
+    if (!this.playBlocked && !this.winner && this.gameMatrix[0][column] == 0) {
       this.playBlocked = true;
       this.recursiveLineMatrizLoop(0, column);
     }
@@ -81,7 +81,16 @@ export class GamePage {
 
   checkForWinners(index, column) {
     let winner = this.minMax.verificaGanhador(this.gameMatrix, index, column, true);
-    this.winGameAndReset(winner);
+    if(winner != 0) {
+      this.winGameAndReset(winner);
+    }
+    else {
+      let possibilities = this.minMax.getPosicoes(this.gameMatrix)
+      if(possibilities.length == 0) {
+        this.winGameAndReset(-1);
+      }
+    }
+    
   }
 
 
@@ -91,6 +100,9 @@ export class GamePage {
       this.players.red += 1;
     } else if (winner === 2) {
       this.players.blue += 1;
+    }
+    else if(winner === -1) {
+      console.log("EMPATE")
     }
 
   }
